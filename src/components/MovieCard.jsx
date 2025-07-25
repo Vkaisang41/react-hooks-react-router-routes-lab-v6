@@ -1,12 +1,30 @@
-import { Link } from "react-router-dom";
+// src/pages/Movie.js
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import NavBar from "../components/NavBar";
 
-function MovieCard({ movie }) {
+function Movie() {
+  const { id } = useParams();
+  const [movie, setMovie] = useState(null);
+
+  useEffect(() => {
+    fetch(`http://localhost:3000/movies/${id}`)
+      .then((r) => r.json())
+      .then(setMovie);
+  }, [id]);
+
+  if (!movie) return <p>Loading...</p>;
+
   return (
     <div>
-      <h2>{movie.title}</h2>
-      <Link to={`/movie/${movie.id}`}>View Info</Link>
+      <NavBar />
+      <h1>{movie.title}</h1>
+      <p>{movie.time}</p>
+      {movie.genres.map((genre) => (
+        <span key={genre}>{genre}</span>
+      ))}
     </div>
   );
 }
 
-export default MovieCard;
+export default Movie;
